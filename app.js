@@ -1,10 +1,15 @@
 'use strict';
 
 // ── Supabase ──────────────────────────────────────────
-const sb = supabase.createClient(
-  'https://ppsstgcjzbsqbnanlcfm.supabase.co',
-  'sb_publishable_gpqLY0R0KvlXaFj2MF-Acw_2-riJKvn'
-);
+let sb = null;
+try {
+  sb = supabase.createClient(
+    'https://ppsstgcjzbsqbnanlcfm.supabase.co',
+    'sb_publishable_gpqLY0R0KvlXaFj2MF-Acw_2-riJKvn'
+  );
+} catch (e) {
+  console.warn('[supabase] SDK 로드 실패, 로컬 전용으로 실행:', e);
+}
 let currentUserId = null;
 let pendingEmail = '';
 
@@ -481,6 +486,11 @@ async function init() {
     navigator.serviceWorker.register('sw.js').catch(() => {});
   }
   initDayLog();
+
+  if (!sb) {
+    startApp();
+    return;
+  }
 
   const { data: { session } } = await sb.auth.getSession();
   if (!session) {
