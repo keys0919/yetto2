@@ -1,4 +1,4 @@
-const CACHE = 'yetto2-v8';
+const CACHE = 'yetto2-v9';
 const ASSETS = ['.', 'index.html', 'style.css', 'app.js', 'manifest.json'];
 
 self.addEventListener('install', e => {
