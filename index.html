@@ -24,9 +24,16 @@
       <div class="login-center">
         <h1 class="login-title">Yetto</h1>
         <p class="login-sub" id="login-msg">이메일로 로그인하면<br>기기를 바꿔도 기록이 유지됩니다</p>
-        <div class="login-form" id="login-form">
-          <input class="login-input" type="email" id="login-email" placeholder="이메일 입력" autocomplete="email" inputmode="email">
-          <button class="primary-btn" id="btn-login">로그인 링크 받기</button>
+        <div class="login-form">
+          <div id="login-step-email">
+            <input class="login-input" type="email" id="login-email" placeholder="이메일 입력" autocomplete="email" inputmode="email">
+            <button class="primary-btn" id="btn-login-send">인증 코드 받기</button>
+          </div>
+          <div id="login-step-otp" style="display:none">
+            <input class="login-input login-input--otp" type="text" id="login-otp" inputmode="numeric" maxlength="6" pattern="[0-9]*" placeholder="000000" autocomplete="one-time-code">
+            <button class="primary-btn" id="btn-login-verify">확인</button>
+            <button class="secondary-btn" id="btn-login-resend">코드 다시 받기</button>
+          </div>
         </div>
       </div>
     </div>

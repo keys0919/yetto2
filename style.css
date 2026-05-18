@@ -529,3 +529,19 @@ html, body {
 
 .login-input:focus { border-color: var(--primary); }
 .login-input::placeholder { color: var(--text-tertiary); }
+
+.login-input--otp {
+  text-align: center;
+  letter-spacing: 8px;
+  font-size: 24px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+#login-step-email,
+#login-step-otp {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
