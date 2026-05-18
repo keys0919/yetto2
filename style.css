@@ -1,0 +1,343 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --bg: #F8F8F6;
+  --surface: #EFEFED;
+  --border: #D8D8D5;
+  --text: #1A1A18;
+  --text-secondary: #6B6B68;
+  --primary: #C17B2F;
+  --tab-bg: rgba(248, 248, 246, 0.88);
+  --tab-border: rgba(0, 0, 0, 0.08);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #111110;
+    --surface: #1C1C1A;
+    --border: #2C2C2A;
+    --text: #EDEDEB;
+    --text-secondary: #9B9B98;
+    --primary: #D4924A;
+    --tab-bg: rgba(17, 17, 16, 0.88);
+    --tab-border: rgba(255, 255, 255, 0.08);
+  }
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* 화면 */
+.screen {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+}
+
+.screen.active { display: flex; flex-direction: column; }
+.screen.no-tab { padding-bottom: 0; }
+
+.safe-area {
+  flex: 1;
+  padding:
+    max(env(safe-area-inset-top), 20px) 24px
+    max(env(safe-area-inset-bottom), 20px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* 홈 */
+.record-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+
+.record-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.record-label {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+}
+
+.record-value {
+  font-size: 20px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.record-divider {
+  width: 1px;
+  height: 32px;
+  background: var(--border);
+}
+
+.urge-btn {
+  background: var(--primary);
+  color: #fff;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border: none;
+  border-radius: 999px;
+  padding: 20px 56px;
+  cursor: pointer;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s, opacity 0.1s;
+}
+
+.urge-btn:active { transform: scale(0.97); opacity: 0.85; }
+
+/* 타이머 */
+.timer-area {
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.timer-display {
+  font-size: 72px;
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 2px;
+  color: var(--primary);
+}
+
+.timer-gap {
+  font-size: 14px;
+  color: var(--text-secondary);
+  min-height: 20px;
+}
+
+/* 결과 */
+.result-area {
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.result-time {
+  font-size: 64px;
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 2px;
+  color: var(--primary);
+}
+
+.result-sub {
+  font-size: 15px;
+  color: var(--text-secondary);
+  min-height: 20px;
+}
+
+.result-actions {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* 공통 버튼 */
+.primary-btn {
+  width: 100%;
+  max-width: 320px;
+  padding: 18px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: opacity 0.1s;
+}
+
+.primary-btn:active { opacity: 0.8; }
+
+.secondary-btn {
+  width: 100%;
+  padding: 14px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.secondary-btn:active { opacity: 0.7; }
+
+/* 기록 */
+.stats-area {
+  gap: 16px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.stats-heading {
+  font-size: 28px;
+  font-weight: 700;
+  padding-top: 4px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-card-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.stat-card-value {
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 일별 로그 */
+.daylog-wrap {
+  background: var(--surface);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.daylog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.daylog-label {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.cal-nav {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--primary);
+  cursor: pointer;
+  padding: 0 8px;
+  line-height: 1;
+}
+
+.cal-nav:disabled { color: var(--border); cursor: default; }
+
+.daylog-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.daylog-empty {
+  padding: 28px 16px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.daylog-row {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  gap: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.daylog-row:last-child { border-bottom: none; }
+
+.daylog-index {
+  font-size: 13px;
+  color: var(--text-secondary);
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.daylog-time {
+  font-size: 15px;
+  color: var(--text);
+  flex: 1;
+}
+
+.daylog-duration {
+  font-size: 15px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+/* 탭 바 */
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: calc(60px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--tab-bg);
+  border-top: 1px solid var(--tab-border);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  display: flex;
+  align-items: flex-start;
+  padding-top: 8px;
+}
+
+.tab-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.tab-btn.active { color: var(--primary); }
+
+.tab-label {
+  font-size: 10px;
+}

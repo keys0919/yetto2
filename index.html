@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Yetto">
+  <meta name="theme-color" content="#007aff">
+  <title>Yetto</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- 홈 -->
+  <div id="screen-home" class="screen">
+    <div class="safe-area">
+      <div class="record-row">
+        <div class="record-item">
+          <span class="record-label">오늘 최고</span>
+          <span class="record-value" id="home-today-best">—</span>
+        </div>
+        <div class="record-divider"></div>
+        <div class="record-item">
+          <span class="record-label">전체 최고</span>
+          <span class="record-value" id="home-all-best">—</span>
+        </div>
+      </div>
+      <button class="urge-btn" id="btn-urge">피고 싶다</button>
+    </div>
+  </div>
+
+  <!-- 타이머 -->
+  <div id="screen-timer" class="screen no-tab">
+    <div class="safe-area timer-area">
+      <div class="timer-display" id="timer-display">00:00</div>
+      <div class="timer-gap" id="timer-gap"></div>
+      <button class="primary-btn" id="btn-done">완료</button>
+    </div>
+  </div>
+
+  <!-- 결과 -->
+  <div id="screen-result" class="screen no-tab">
+    <div class="safe-area result-area">
+      <div class="result-time" id="result-time">00:00</div>
+      <div class="result-sub" id="result-sub"></div>
+      <div class="result-actions">
+        <button class="primary-btn" id="btn-retry">한 번 더</button>
+        <button class="secondary-btn" id="btn-home">홈으로</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 기록 -->
+  <div id="screen-stats" class="screen">
+    <div class="safe-area stats-area">
+      <h1 class="stats-heading">기록</h1>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-card-label">오늘</span>
+          <span class="stat-card-value" id="stats-today-count">0번</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-label">이달</span>
+          <span class="stat-card-value" id="stats-month-count">0번</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-label">오늘 최고</span>
+          <span class="stat-card-value" id="stats-today-best">—</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-card-label">전체 최고</span>
+          <span class="stat-card-value" id="stats-all-best">—</span>
+        </div>
+      </div>
+
+      <div class="daylog-wrap">
+        <div class="daylog-header">
+          <button class="cal-nav" id="day-prev">‹</button>
+          <span class="daylog-label" id="day-label"></span>
+          <button class="cal-nav" id="day-next">›</button>
+        </div>
+        <div class="daylog-list" id="daylog-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 탭 바 -->
+  <nav class="tab-bar" id="tab-bar">
+    <button class="tab-btn active" data-screen="home">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+        <path d="M9 21V12h6v9"/>
+      </svg>
+      <span class="tab-label">홈</span>
+    </button>
+    <button class="tab-btn" data-screen="stats">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+      <span class="tab-label">기록</span>
+    </button>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>
