@@ -288,6 +288,41 @@ function renderDayLog() {
   });
 }
 
+// ── 내보내기 / 가져오기 ────────────────────────────────
+function exportData() {
+  const data = load();
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `yetto-backup-${todayStr()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (!Array.isArray(imported.sessions)) throw new Error();
+      const current = load();
+      const tsSet = new Set(current.sessions.map(s => s.startedAt));
+      imported.sessions.forEach(s => {
+        if (!tsSet.has(s.startedAt)) current.sessions.push(s);
+      });
+      current.sessions.sort((a, b) => a.startedAt - b.startedAt);
+      save(current);
+      updateStats();
+      alert(`${imported.sessions.length}건 가져오기 완료`);
+    } catch {
+      alert('올바른 백업 파일이 아닙니다.');
+    }
+  };
+  reader.readAsText(file);
+}
+
 // ── 이벤트 ───────────────────────────────────────────
 document.getElementById('btn-urge').addEventListener('click', () => {
   const data = load();
@@ -358,6 +393,18 @@ document.getElementById('day-next').addEventListener('click', () => {
 // 앱 복귀 시 타이머 재동기화
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden && timerInterval) updateTimerDisplay();
+});
+
+document.getElementById('btn-export').addEventListener('click', exportData);
+
+document.getElementById('btn-import-trigger').addEventListener('click', () => {
+  document.getElementById('input-import').click();
+});
+
+document.getElementById('input-import').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (file) importData(file);
+  e.target.value = '';
 });
 
 // ── 초기화 ───────────────────────────────────────────

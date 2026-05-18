@@ -474,3 +474,25 @@ html, body {
   font-weight: 500;
   letter-spacing: 0;
 }
+
+/* ── Backup Row ────────────────────────────────────── */
+.backup-row {
+  display: flex;
+  gap: 10px;
+}
+
+.backup-btn {
+  flex: 1;
+  height: 44px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Pretendard Variable', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: opacity 80ms ease-out;
+}
+
+.backup-btn:active { opacity: 0.6; }
