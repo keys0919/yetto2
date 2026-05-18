@@ -434,7 +434,10 @@ document.getElementById('btn-login-send').addEventListener('click', async () => 
   if (error) {
     btn.disabled = false;
     btn.textContent = '인증 코드 받기';
-    document.getElementById('login-msg').textContent = `오류: ${error.message} (${error.status ?? '?'})`;
+    const msg = error.message?.includes('rate limit')
+      ? '이메일 발송 한도를 초과했습니다.\n잠시 후 다시 시도해 주세요.'
+      : '오류가 발생했습니다. 다시 시도해 주세요.';
+    document.getElementById('login-msg').textContent = msg;
   } else {
     pendingEmail = email;
     document.getElementById('login-step-email').style.display = 'none';
