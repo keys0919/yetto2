@@ -5,60 +5,79 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* ── Color Tokens ──────────────────────────────────── */
 :root {
-  --bg: #F8F8F6;
-  --surface: #EFEFED;
-  --border: #D8D8D5;
-  --text: #1A1A18;
-  --text-secondary: #6B6B68;
-  --primary: #C17B2F;
-  --tab-bg: rgba(248, 248, 246, 0.88);
-  --tab-border: rgba(0, 0, 0, 0.08);
+  --bg:             #EDF6F7;
+  --surface:        #DBF0F1;
+  --surface-2:      #C5E0E3;
+  --primary:        #0E6878;
+  --primary-light:  rgba(14, 104, 120, 0.10);
+  --primary-dark:   #0A4E5C;
+  --text:           #0C2D36;
+  --text-secondary: #467880;
+  --text-tertiary:  rgba(12, 45, 54, 0.38);
+  --border:         #A8CDD2;
+  --border-strong:  #7DAEB5;
+  --shadow-warm:    rgba(10, 60, 80, 0.12);
+  --shadow-neutral: rgba(9, 28, 34, 0.10);
+  --tab-bg:         rgba(237, 246, 247, 0.92);
+  --tab-border:     #A8CDD2;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #111110;
-    --surface: #1C1C1A;
-    --border: #2C2C2A;
-    --text: #EDEDEB;
-    --text-secondary: #9B9B98;
-    --primary: #D4924A;
-    --tab-bg: rgba(17, 17, 16, 0.88);
-    --tab-border: rgba(255, 255, 255, 0.08);
+    --bg:             #091C22;
+    --surface:        #0E2B34;
+    --surface-2:      #162F38;
+    --primary:        #29A0B2;
+    --primary-light:  rgba(41, 160, 178, 0.15);
+    --primary-dark:   #1E7E8E;
+    --text:           #DAF0F2;
+    --text-secondary: #6AA5AE;
+    --text-tertiary:  rgba(218, 240, 242, 0.38);
+    --border:         #1A4450;
+    --border-strong:  #2A5E6E;
+    --shadow-warm:    rgba(0, 20, 30, 0.35);
+    --shadow-neutral: rgba(0, 10, 15, 0.28);
+    --tab-bg:         rgba(9, 28, 34, 0.92);
+    --tab-border:     #1A4450;
   }
 }
 
+/* ── Base ──────────────────────────────────────────── */
 html, body {
   height: 100%;
   overflow: hidden;
   background: var(--bg);
   color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Pretendard Variable', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* 화면 */
+/* ── Screen ────────────────────────────────────────── */
 .screen {
   display: none;
   position: fixed;
   inset: 0;
   background: var(--bg);
-  padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px));
 }
 
-.screen.active { display: flex; flex-direction: column; }
-.screen.no-tab { padding-bottom: 0; }
+.screen.active  { display: flex; flex-direction: column; }
+.screen.no-tab  { padding-bottom: 0; }
 
 .safe-area {
   flex: 1;
   padding:
-    max(env(safe-area-inset-top), 20px) 24px
+    max(env(safe-area-inset-top), 20px) 20px
     max(env(safe-area-inset-bottom), 20px);
   display: flex;
   flex-direction: column;
 }
 
-/* 홈 */
+/* ── Home ──────────────────────────────────────────── */
 .record-row {
   display: flex;
   align-items: center;
@@ -75,14 +94,16 @@ html, body {
 
 .record-label {
   font-size: 12px;
-  letter-spacing: 0.5px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
   color: var(--text-secondary);
 }
 
 .record-value {
   font-size: 20px;
-  font-weight: 500;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
+  font-family: 'Roboto', 'SF Pro Rounded', monospace;
   color: var(--text);
 }
 
@@ -94,24 +115,26 @@ html, body {
 
 .urge-btn {
   background: var(--primary);
-  color: #fff;
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  color: #FFFFFF;
+  font-size: 18px;
+  font-weight: 700;
+  font-family: 'Pretendard Variable', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
   border: none;
-  border-radius: 999px;
-  padding: 20px 56px;
+  border-radius: 9999px;
+  height: 64px;
+  padding: 0 56px;
   cursor: pointer;
   margin: auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.1s, opacity 0.1s;
+  box-shadow: 0 4px 12px var(--shadow-warm);
+  transition: transform 80ms ease-out, opacity 80ms ease-out;
 }
 
-.urge-btn:active { transform: scale(0.97); opacity: 0.85; }
+.urge-btn:active { transform: scale(0.97); opacity: 0.7; }
 
-/* 타이머 */
+/* ── Timer ─────────────────────────────────────────── */
 .timer-area {
   align-items: center;
   justify-content: center;
@@ -122,17 +145,19 @@ html, body {
   font-size: 72px;
   font-weight: 300;
   font-variant-numeric: tabular-nums;
+  font-family: 'Roboto', 'SF Pro Rounded', monospace;
   letter-spacing: 2px;
   color: var(--primary);
 }
 
 .timer-gap {
   font-size: 14px;
+  font-weight: 400;
   color: var(--text-secondary);
   min-height: 20px;
 }
 
-/* 결과 */
+/* ── Result ────────────────────────────────────────── */
 .result-area {
   align-items: center;
   justify-content: center;
@@ -143,12 +168,14 @@ html, body {
   font-size: 64px;
   font-weight: 300;
   font-variant-numeric: tabular-nums;
+  font-family: 'Roboto', 'SF Pro Rounded', monospace;
   letter-spacing: 2px;
   color: var(--primary);
 }
 
 .result-sub {
   font-size: 15px;
+  font-weight: 400;
   color: var(--text-secondary);
   min-height: 20px;
 }
@@ -162,47 +189,54 @@ html, body {
   margin-top: 24px;
 }
 
-/* 공통 버튼 */
+/* ── Buttons ───────────────────────────────────────── */
 .primary-btn {
   width: 100%;
   max-width: 320px;
-  padding: 18px;
+  height: 52px;
   background: var(--primary);
-  color: #fff;
-  font-size: 17px;
-  font-weight: 600;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'Pretendard Variable', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
   border: none;
-  border-radius: 16px;
+  border-radius: 14px;
   cursor: pointer;
-  transition: opacity 0.1s;
+  transition: transform 80ms ease-out, opacity 80ms ease-out;
 }
 
-.primary-btn:active { opacity: 0.8; }
+.primary-btn:active { transform: scale(0.97); opacity: 0.7; }
 
 .secondary-btn {
   width: 100%;
-  padding: 14px;
+  height: 52px;
   background: transparent;
   color: var(--text-secondary);
   font-size: 16px;
-  border: 1.5px solid var(--border);
-  border-radius: 16px;
+  font-weight: 600;
+  font-family: 'Pretendard Variable', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  border: none;
+  border-radius: 14px;
   cursor: pointer;
+  transition: opacity 80ms ease-out;
 }
 
 .secondary-btn:active { opacity: 0.7; }
 
-/* 기록 */
+/* ── Stats Screen ──────────────────────────────────── */
 .stats-area {
-  gap: 16px;
+  gap: 24px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
 .stats-heading {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.3px;
   padding-top: 4px;
+  color: var(--text);
 }
 
 .stats-grid {
@@ -213,55 +247,119 @@ html, body {
 
 .stat-card {
   background: var(--surface);
-  border-radius: 14px;
+  border-radius: 18px;
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  box-shadow: 0 1px 4px var(--shadow-warm);
 }
 
 .stat-card-label {
-  font-size: 13px;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
   color: var(--text-secondary);
 }
 
 .stat-card-value {
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
+  font-family: 'Roboto', 'SF Pro Rounded', monospace;
+  color: var(--text);
 }
 
-/* 일별 로그 */
+.stat-card-value--sm {
+  font-size: 17px;
+}
+
+/* ── Avg Compare Card ──────────────────────────────── */
+.avg-card {
+  background: var(--surface);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px var(--shadow-warm);
+}
+
+.avg-card-header {
+  padding: 14px 16px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  color: var(--text-secondary);
+}
+
+.avg-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.avg-item {
+  padding: 10px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.avg-item:nth-child(-n+2) { border-bottom: 1px solid var(--border); }
+.avg-item:nth-child(odd)  { border-right:  1px solid var(--border); }
+
+.avg-label {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  color: var(--text-secondary);
+}
+
+.avg-value {
+  font-size: 18px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  font-family: 'Roboto', 'SF Pro Rounded', monospace;
+  color: var(--text);
+}
+
+/* ── Day Log ───────────────────────────────────────── */
 .daylog-wrap {
   background: var(--surface);
-  border-radius: 14px;
+  border-radius: 18px;
   overflow: hidden;
+  box-shadow: 0 1px 4px var(--shadow-warm);
 }
 
 .daylog-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 16px;
+  padding: 12px 8px 12px 16px;
   border-bottom: 1px solid var(--border);
 }
 
 .daylog-label {
   font-size: 15px;
   font-weight: 600;
+  color: var(--text);
 }
 
 .cal-nav {
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 22px;
   color: var(--primary);
   cursor: pointer;
-  padding: 0 8px;
   line-height: 1;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  transition: opacity 80ms ease-out;
 }
 
-.cal-nav:disabled { color: var(--border); cursor: default; }
+.cal-nav:active  { opacity: 0.7; }
+.cal-nav:disabled { color: var(--border); cursor: default; opacity: 1; }
 
 .daylog-list {
   display: flex;
@@ -269,50 +367,68 @@ html, body {
 }
 
 .daylog-empty {
-  padding: 28px 16px;
+  padding: 32px 20px;
   text-align: center;
   font-size: 14px;
+  font-weight: 400;
   color: var(--text-secondary);
 }
 
 .daylog-row {
   display: flex;
   align-items: center;
-  padding: 14px 16px;
-  gap: 16px;
+  padding: 12px 16px;
+  gap: 12px;
   border-bottom: 1px solid var(--border);
 }
 
 .daylog-row:last-child { border-bottom: none; }
 
 .daylog-index {
-  font-size: 13px;
-  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-tertiary);
   width: 20px;
   text-align: center;
   flex-shrink: 0;
 }
 
+.daylog-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .daylog-time {
   font-size: 15px;
+  font-weight: 500;
   color: var(--text);
-  flex: 1;
+}
+
+.daylog-gap {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  color: var(--text-secondary);
 }
 
 .daylog-duration {
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
+  font-family: 'Roboto', 'SF Pro Rounded', monospace;
   color: var(--text);
+  flex-shrink: 0;
 }
 
-/* 탭 바 */
+/* ── Tab Bar ───────────────────────────────────────── */
 .tab-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: calc(60px + env(safe-area-inset-bottom, 0px));
+  height: calc(56px + env(safe-area-inset-bottom, 0px));
   padding-bottom: env(safe-area-inset-bottom, 0px);
   background: var(--tab-bg);
   border-top: 1px solid var(--tab-border);
@@ -331,13 +447,17 @@ html, body {
   gap: 3px;
   background: none;
   border: none;
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
   cursor: pointer;
   padding: 4px 0;
+  min-height: 44px;
+  transition: color 150ms ease-out;
 }
 
 .tab-btn.active { color: var(--primary); }
 
 .tab-label {
   font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0;
 }

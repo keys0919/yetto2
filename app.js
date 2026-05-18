@@ -26,30 +26,81 @@ function formatTime(sec) {
   return `${pad(m)}:${pad(s)}`;
 }
 
+function formatGap(sec) {
+  if (sec < 60) return '1분 미만';
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  if (h === 0) return `${m}분`;
+  return `${h}시간 ${m}분`;
+}
+
 function pad(n) { return String(n).padStart(2, '0'); }
 
 // ── 통계 ─────────────────────────────────────────────
+function gapSec(prev, curr) {
+  return Math.floor((curr.startedAt - (prev.startedAt + prev.durationSec * 1000)) / 1000);
+}
+
+function avgOf(arr) {
+  return arr.length > 0 ? Math.floor(arr.reduce((a, b) => a + b, 0) / arr.length) : null;
+}
+
 function computeStats() {
   const data = load();
+  const now = Date.now();
   const today = todayStr();
   const thisMonth = today.slice(0, 7);
 
-  const todaySessions = data.sessions.filter(s => s.date === today);
-  const monthSessions = data.sessions.filter(s => s.date.startsWith(thisMonth));
+  const all = [...data.sessions].sort((a, b) => a.startedAt - b.startedAt);
+  const todaySessions = all.filter(s => s.date === today);
+  const monthSessions = all.filter(s => s.date.startsWith(thisMonth));
+  const weekSessions  = all.filter(s => s.startedAt >= now - 7 * 86400 * 1000);
 
-  const todayCount   = todaySessions.length;
-  const monthCount   = monthSessions.length;
-  const todayBest    = todaySessions.reduce((m, s) => Math.max(m, s.durationSec), 0);
-  const allTimeBest  = data.sessions.reduce((m, s) => Math.max(m, s.durationSec), 0);
+  const todayCount = todaySessions.length;
 
-  const dailyHistory = {};
-  for (const s of data.sessions) {
-    if (!dailyHistory[s.date]) dailyHistory[s.date] = { count: 0, best: 0 };
-    dailyHistory[s.date].count++;
-    dailyHistory[s.date].best = Math.max(dailyHistory[s.date].best, s.durationSec);
+  // 마지막 간격
+  let lastGap = null;
+  let isFirstRecord = all.length <= 1;
+  if (all.length >= 2) {
+    const g = gapSec(all[all.length - 2], all[all.length - 1]);
+    if (g >= 0) lastGap = g;
   }
 
-  return { todayCount, monthCount, todayBest, allTimeBest, dailyHistory };
+  // 오늘 평균 간격 (오늘 세션 간 연속 쌍)
+  const todayGaps = [];
+  for (let i = 1; i < todaySessions.length; i++) {
+    const g = gapSec(todaySessions[i - 1], todaySessions[i]);
+    if (g >= 0) todayGaps.push(g);
+  }
+  const todayAvgGap = avgOf(todayGaps);
+
+  // 주간 평균 간격 (주간 세션 간 연속 쌍)
+  const weekGaps = [];
+  for (let i = 1; i < weekSessions.length; i++) {
+    const g = gapSec(weekSessions[i - 1], weekSessions[i]);
+    if (g >= 0) weekGaps.push(g);
+  }
+  const weekAvgGap = avgOf(weekGaps);
+
+  // 평균 비교
+  const daysElapsed = new Date().getDate();
+  const weekAvgCount  = weekSessions.length > 0 ? +(weekSessions.length / 7).toFixed(1) : null;
+  const monthAvgCount = monthSessions.length > 0 ? +(monthSessions.length / daysElapsed).toFixed(1) : null;
+  const weekAvgHolding  = avgOf(weekSessions.map(s => s.durationSec));
+  const monthAvgHolding = avgOf(monthSessions.map(s => s.durationSec));
+
+  // 하위 호환
+  const todayBest   = todaySessions.reduce((m, s) => Math.max(m, s.durationSec), 0);
+  const allTimeBest = all.reduce((m, s) => Math.max(m, s.durationSec), 0);
+
+  return {
+    todayCount, lastGap, isFirstRecord,
+    todayAvgGap, weekAvgGap,
+    weekAvgCount, monthAvgCount,
+    weekAvgHolding, monthAvgHolding,
+    todayBest, allTimeBest,
+    all,
+  };
 }
 
 // ── 화면 전환 ─────────────────────────────────────────
@@ -108,10 +159,20 @@ function updateHome() {
 // ── 기록 화면 업데이트 ────────────────────────────────
 function updateStats() {
   const s = computeStats();
-  document.getElementById('stats-today-count').textContent = s.todayCount + '번';
-  document.getElementById('stats-month-count').textContent = s.monthCount + '번';
-  document.getElementById('stats-today-best').textContent  = s.todayBest > 0 ? formatTime(s.todayBest) : '—';
-  document.getElementById('stats-all-best').textContent    = s.allTimeBest > 0 ? formatTime(s.allTimeBest) : '—';
+
+  const el = id => document.getElementById(id);
+  const fmt = (v, fn) => v != null ? fn(v) : '—';
+
+  el('stats-today-count').textContent   = `${s.todayCount}번`;
+  el('stats-last-gap').textContent      = s.isFirstRecord ? '첫 기록' : fmt(s.lastGap, formatGap);
+  el('stats-today-avg-gap').textContent = fmt(s.todayAvgGap, formatGap);
+  el('stats-week-avg-gap').textContent  = fmt(s.weekAvgGap, formatGap);
+
+  el('stats-week-avg-count').textContent  = s.weekAvgCount  != null ? `${s.weekAvgCount}번` : '—';
+  el('stats-month-avg-count').textContent = s.monthAvgCount != null ? `${s.monthAvgCount}번` : '—';
+  el('stats-week-avg-hold').textContent   = fmt(s.weekAvgHolding,  formatTime);
+  el('stats-month-avg-hold').textContent  = fmt(s.monthAvgHolding, formatTime);
+
   renderDayLog();
 }
 
@@ -147,9 +208,8 @@ function renderDayLog() {
 
   const key  = logDate.toISOString().slice(0, 10);
   const data = load();
-  const rows = data.sessions
-    .filter(s => s.date === key)
-    .sort((a, b) => a.startedAt - b.startedAt);
+  const allSorted = [...data.sessions].sort((a, b) => a.startedAt - b.startedAt);
+  const rows = allSorted.filter(s => s.date === key);
 
   const list = document.getElementById('daylog-list');
   list.innerHTML = '';
@@ -170,16 +230,45 @@ function renderDayLog() {
     idx.className = 'daylog-index';
     idx.textContent = i + 1;
 
+    const left = document.createElement('div');
+    left.className = 'daylog-left';
+
     const time = document.createElement('span');
     time.className = 'daylog-time';
     time.textContent = formatTimeOfDay(s.startedAt);
+
+    const gapEl = document.createElement('span');
+    gapEl.className = 'daylog-gap';
+
+    if (i === 0) {
+      const globalIdx = allSorted.findIndex(x => x.startedAt === s.startedAt);
+      if (globalIdx <= 0) {
+        gapEl.textContent = '첫 기록';
+      } else {
+        const g = gapSec(allSorted[globalIdx - 1], s);
+        gapEl.textContent = g >= 0 ? `+${formatGap(g)}` : '—';
+      }
+    } else {
+      const g = gapSec(rows[i - 1], s);
+      gapEl.textContent = g >= 0 ? `+${formatGap(g)}` : '—';
+    }
+
+    left.appendChild(time);
+    left.appendChild(gapEl);
 
     const dur = document.createElement('span');
     dur.className = 'daylog-duration';
     dur.textContent = formatTime(s.durationSec);
 
+    if (s.note) {
+      const note = document.createElement('span');
+      note.className = 'daylog-gap';
+      note.textContent = s.note;
+      left.appendChild(note);
+    }
+
     row.appendChild(idx);
-    row.appendChild(time);
+    row.appendChild(left);
     row.appendChild(dur);
     list.appendChild(row);
   });
