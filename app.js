@@ -92,8 +92,9 @@ function computeStats() {
 
   // 평균 비교 — 분모는 "실제 경과 일수" (데이터가 부족하면 있는 만큼만)
   const daysElapsed = new Date().getDate() - 1; // 오늘 제외
+  const todayMs = startOfDay(new Date()).getTime();
   const weekSpan = weekSessions.length > 0
-    ? Math.min(7, Math.ceil((now - weekSessions[0].startedAt) / (86400 * 1000)))
+    ? Math.min(7, Math.max(1, Math.round((todayMs - startOfDay(new Date(weekSessions[0].startedAt)).getTime()) / (86400 * 1000))))
     : 7;
   const monthFirstDay = monthSessions.length > 0 ? new Date(monthSessions[0].startedAt).getDate() : daysElapsed;
   const monthSpan = Math.max(1, daysElapsed - monthFirstDay + 1);
