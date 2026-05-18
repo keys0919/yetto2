@@ -1,67 +1,5 @@
 'use strict';
 
-// ── Supabase ──────────────────────────────────────────
-let sb = null;
-try {
-  sb = supabase.createClient(
-    'https://ppsstgcjzbsqbnanlcfm.supabase.co',
-    'sb_publishable_gpqLY0R0KvlXaFj2MF-Acw_2-riJKvn'
-  );
-} catch (e) {
-  console.warn('[supabase] SDK 로드 실패, 로컬 전용으로 실행:', e);
-}
-let currentUserId = null;
-let pendingEmail = '';
-
-async function sendOtp(email) {
-  const { error } = await sb.auth.signInWithOtp({ email });
-  return error;
-}
-
-async function syncFromRemote(userId) {
-  const { data, error } = await sb.from('sessions')
-    .select('started_at,duration_sec')
-    .eq('user_id', userId)
-    .order('started_at', { ascending: true });
-  if (error || !data || data.length === 0) return;
-
-  const local = load();
-  const tsSet = new Set(local.sessions.map(s => s.startedAt));
-  let added = 0;
-  data.forEach(row => {
-    const ts = new Date(row.started_at).getTime();
-    if (!tsSet.has(ts)) {
-      local.sessions.push({ id: String(ts), startedAt: ts, durationSec: row.duration_sec, date: dateStr(new Date(ts)) });
-      added++;
-    }
-  });
-  if (added > 0) {
-    local.sessions.sort((a, b) => a.startedAt - b.startedAt);
-    save(local);
-  }
-}
-
-function pushSession(session, userId) {
-  sb.from('sessions').insert({
-    user_id: userId,
-    started_at: new Date(session.startedAt).toISOString(),
-    duration_sec: session.durationSec,
-    outcome: 'success',
-  }).then(({ error }) => {
-    if (error) console.warn('[supabase] insert failed:', error.message);
-  });
-}
-
-function showLoginScreen() {
-  document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
-  document.getElementById('screen-login').classList.add('active');
-  document.getElementById('tab-bar').style.display = 'none';
-}
-
-function hideLoginScreen() {
-  document.getElementById('screen-login').classList.remove('active');
-}
-
 const STORAGE_KEY = 'yetto2';
 
 // ── 데이터 ──────────────────────────────────────────
@@ -363,17 +301,15 @@ document.getElementById('btn-done').addEventListener('click', () => {
   const data = load();
   if (!data.active) return;
 
-  const startedAt = data.active.startedAt;
-  const durationSec = Math.floor((Date.now() - startedAt) / 1000);
+  const durationSec = Math.floor((Date.now() - data.active.startedAt) / 1000);
   data.sessions.push({
-    id: String(startedAt),
-    startedAt,
+    id: String(data.active.startedAt),
+    startedAt: data.active.startedAt,
     durationSec,
     date: todayStr(),
   });
   data.active = null;
   save(data);
-  if (currentUserId) pushSession({ startedAt, durationSec }, currentUserId);
 
   const stats = computeStats();
   document.getElementById('result-time').textContent = formatTime(durationSec);
@@ -423,62 +359,14 @@ document.addEventListener('visibilitychange', () => {
   if (!document.hidden && timerInterval) updateTimerDisplay();
 });
 
-// ── 로그인 이벤트 ──────────────────────────────────────
-document.getElementById('btn-login-send').addEventListener('click', async () => {
-  const email = document.getElementById('login-email').value.trim();
-  if (!email) return;
-  const btn = document.getElementById('btn-login-send');
-  btn.disabled = true;
-  btn.textContent = '전송 중...';
-  const error = await sendOtp(email);
-  if (error) {
-    btn.disabled = false;
-    btn.textContent = '인증 코드 받기';
-    if (error.message?.includes('rate limit')) {
-      pendingEmail = email;
-      document.getElementById('login-step-email').style.display = 'none';
-      document.getElementById('login-step-otp').style.display = 'flex';
-      document.getElementById('login-msg').textContent = '이전에 발송된 코드를 입력해 주세요.\n(발송 한도 초과)';
-      document.getElementById('login-otp').focus();
-    } else {
-      document.getElementById('login-msg').textContent = '오류가 발생했습니다. 다시 시도해 주세요.';
-    }
-  } else {
-    pendingEmail = email;
-    document.getElementById('login-step-email').style.display = 'none';
-    document.getElementById('login-step-otp').style.display = 'flex';
-    document.getElementById('login-msg').textContent = `${email}로\n6자리 코드를 보냈습니다`;
-    document.getElementById('login-otp').focus();
-  }
-});
-
-document.getElementById('btn-login-verify').addEventListener('click', async () => {
-  const token = document.getElementById('login-otp').value.trim();
-  if (token.length !== 6) return;
-  const btn = document.getElementById('btn-login-verify');
-  btn.disabled = true;
-  btn.textContent = '확인 중...';
-  const { data, error } = await sb.auth.verifyOtp({ email: pendingEmail, token, type: 'email' });
-  if (error || !data.session) {
-    btn.disabled = false;
-    btn.textContent = '확인';
-    document.getElementById('login-msg').textContent = '코드가 올바르지 않습니다. 다시 확인해 주세요.';
-  } else {
-    currentUserId = data.session.user.id;
-    await syncFromRemote(currentUserId);
-    hideLoginScreen();
-    startApp();
-  }
-});
-
-document.getElementById('btn-login-resend').addEventListener('click', async () => {
-  await sendOtp(pendingEmail);
-  document.getElementById('login-msg').textContent = `${pendingEmail}로\n코드를 다시 보냈습니다`;
-  document.getElementById('login-otp').value = '';
-});
-
 // ── 초기화 ───────────────────────────────────────────
-function startApp() {
+function init() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+
+  initDayLog();
+
   const data = load();
   if (data.active) {
     showScreen('timer');
@@ -487,28 +375,6 @@ function startApp() {
     updateHome();
     showScreen('home');
   }
-}
-
-async function init() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
-  }
-  initDayLog();
-
-  if (!sb) {
-    startApp();
-    return;
-  }
-
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) {
-    showLoginScreen();
-    return;
-  }
-
-  currentUserId = session.user.id;
-  await syncFromRemote(currentUserId);
-  startApp();
 }
 
 init();
