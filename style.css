@@ -124,12 +124,16 @@ html, body {
   height: 64px;
   padding: 0 56px;
   cursor: pointer;
-  margin: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px var(--shadow-warm);
   transition: transform 80ms ease-out, opacity 80ms ease-out;
+}
+
+#screen-home .safe-area {
+  justify-content: center;
+  gap: 48px;
 }
 
 .urge-btn:active { transform: scale(0.97); opacity: 0.7; }
@@ -322,6 +326,7 @@ html, body {
 
 /* ── Day Log ───────────────────────────────────────── */
 .daylog-wrap {
+  flex: 1;
   background: var(--surface);
   border-radius: 18px;
   overflow: hidden;
