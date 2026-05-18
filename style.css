@@ -87,7 +87,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 32px;
+  gap: 20px;
 }
 
 .record-item {
@@ -110,6 +110,10 @@ html, body {
   font-variant-numeric: tabular-nums;
   font-family: 'Roboto', 'SF Pro Rounded', monospace;
   color: var(--text);
+}
+
+.record-value--sm {
+  font-size: 16px;
 }
 
 .record-divider {
@@ -175,6 +179,21 @@ html, body {
 }
 
 .quick-add-btn:active { transform: scale(0.97); opacity: 0.6; }
+
+.text-btn {
+  width: 100%;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 15px;
+  font-weight: 500;
+  font-family: 'Pretendard Variable', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  border: none;
+  height: 44px;
+  cursor: pointer;
+  transition: opacity 80ms ease-out;
+}
+
+.text-btn:active { opacity: 0.5; }
 
 /* ── Toast ─────────────────────────────────────────── */
 .toast {

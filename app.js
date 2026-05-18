@@ -166,8 +166,9 @@ function updateTimerDisplay() {
 // ── 홈 통계 업데이트 ──────────────────────────────────
 function updateHome() {
   const s = computeStats();
-  document.getElementById('home-today-best').textContent = s.todayBest > 0 ? formatTime(s.todayBest) : '—';
-  document.getElementById('home-all-best').textContent   = s.allTimeBest > 0 ? formatTime(s.allTimeBest) : '—';
+  document.getElementById('home-today-count').textContent   = `${s.todayCount}번`;
+  document.getElementById('home-last-gap').textContent      = s.isFirstRecord ? '첫 기록' : (s.lastGap != null ? formatGap(s.lastGap) : '—');
+  document.getElementById('home-today-avg-gap').textContent = s.todayAvgGap != null ? formatGap(s.todayAvgGap) : '—';
 }
 
 // ── 기록 화면 업데이트 ────────────────────────────────
@@ -335,7 +336,7 @@ function showToast(msg) {
 }
 
 // ── 이벤트 ───────────────────────────────────────────
-document.getElementById('btn-quick-add').addEventListener('click', () => {
+function addSessionNow() {
   const data = load();
   const now = Date.now();
   data.sessions.push({
@@ -346,6 +347,15 @@ document.getElementById('btn-quick-add').addEventListener('click', () => {
   });
   save(data);
   updateHome();
+}
+
+document.getElementById('btn-immediate').addEventListener('click', () => {
+  addSessionNow();
+  showToast('흡연 기록됨');
+});
+
+document.getElementById('btn-quick-add').addEventListener('click', () => {
+  addSessionNow();
   showToast('흡연 횟수 추가됨');
 });
 
