@@ -61,8 +61,8 @@ function computeStats() {
 
   const all = [...data.sessions].sort((a, b) => a.startedAt - b.startedAt);
   const todaySessions = all.filter(s => s.date === today);
-  const monthSessions = all.filter(s => s.date.startsWith(thisMonth));
-  const weekSessions  = all.filter(s => s.startedAt >= now - 7 * 86400 * 1000);
+  const monthSessions = all.filter(s => s.date.startsWith(thisMonth) && s.date !== today);
+  const weekSessions  = all.filter(s => s.startedAt >= now - 7 * 86400 * 1000 && s.date !== today);
 
   const todayCount = todaySessions.length;
 
@@ -90,10 +90,15 @@ function computeStats() {
   }
   const weekAvgGap = avgOf(weekGaps);
 
-  // 평균 비교
-  const daysElapsed = new Date().getDate();
-  const weekAvgCount  = weekSessions.length > 0 ? +(weekSessions.length / 7).toFixed(1) : null;
-  const monthAvgCount = monthSessions.length > 0 ? +(monthSessions.length / daysElapsed).toFixed(1) : null;
+  // 평균 비교 — 분모는 "실제 경과 일수" (데이터가 부족하면 있는 만큼만)
+  const daysElapsed = new Date().getDate() - 1; // 오늘 제외
+  const weekSpan = weekSessions.length > 0
+    ? Math.min(7, Math.ceil((now - weekSessions[0].startedAt) / (86400 * 1000)))
+    : 7;
+  const monthFirstDay = monthSessions.length > 0 ? new Date(monthSessions[0].startedAt).getDate() : daysElapsed;
+  const monthSpan = Math.max(1, daysElapsed - monthFirstDay + 1);
+  const weekAvgCount  = weekSessions.length > 0 ? +(weekSessions.length / weekSpan).toFixed(1) : null;
+  const monthAvgCount = monthSessions.length > 0 ? +(monthSessions.length / monthSpan).toFixed(1) : null;
   const weekAvgHolding  = avgOf(weekSessions.map(s => s.durationSec));
   const monthAvgHolding = avgOf(monthSessions.map(s => s.durationSec));
 
