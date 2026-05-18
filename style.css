@@ -72,9 +72,14 @@ html, body {
   flex: 1;
   padding:
     max(env(safe-area-inset-top), 20px) 20px
-    max(env(safe-area-inset-bottom), 20px);
+    20px;
   display: flex;
   flex-direction: column;
+}
+
+/* 탭 없는 화면(타이머, 결과)은 .screen이 safe area를 처리하지 않으므로 여기서 보정 */
+.screen.no-tab .safe-area {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 20px);
 }
 
 /* ── Home ──────────────────────────────────────────── */
