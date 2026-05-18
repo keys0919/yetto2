@@ -434,10 +434,15 @@ document.getElementById('btn-login-send').addEventListener('click', async () => 
   if (error) {
     btn.disabled = false;
     btn.textContent = '인증 코드 받기';
-    const msg = error.message?.includes('rate limit')
-      ? '이메일 발송 한도를 초과했습니다.\n잠시 후 다시 시도해 주세요.'
-      : '오류가 발생했습니다. 다시 시도해 주세요.';
-    document.getElementById('login-msg').textContent = msg;
+    if (error.message?.includes('rate limit')) {
+      pendingEmail = email;
+      document.getElementById('login-step-email').style.display = 'none';
+      document.getElementById('login-step-otp').style.display = 'flex';
+      document.getElementById('login-msg').textContent = '이전에 발송된 코드를 입력해 주세요.\n(발송 한도 초과)';
+      document.getElementById('login-otp').focus();
+    } else {
+      document.getElementById('login-msg').textContent = '오류가 발생했습니다. 다시 시도해 주세요.';
+    }
   } else {
     pendingEmail = email;
     document.getElementById('login-step-email').style.display = 'none';
