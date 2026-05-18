@@ -150,11 +150,18 @@ html, body {
 .home-actions {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 16px;
+  align-items: stretch;
+  gap: 20px;
+  width: min(280px, 100%);
+}
+
+.home-actions .urge-btn {
+  width: 100%;
+  padding: 0;
 }
 
 .quick-add-btn {
+  width: 100%;
   background: transparent;
   color: var(--primary);
   font-size: 18px;
@@ -163,7 +170,6 @@ html, body {
   border: 1.5px solid var(--primary);
   border-radius: 9999px;
   height: 64px;
-  padding: 0 56px;
   cursor: pointer;
   transition: transform 80ms ease-out, opacity 80ms ease-out;
 }
