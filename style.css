@@ -244,14 +244,41 @@ html, body {
   min-height: 0;
 }
 
+.stats-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+}
+
+.stats-header-actions {
+  display: flex;
+  gap: 2px;
+}
+
 .stats-heading {
   font-size: 24px;
   font-weight: 700;
   line-height: 1.3;
   letter-spacing: -0.3px;
-  padding-top: 4px;
   color: var(--text);
 }
+
+.icon-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  transition: opacity 80ms ease-out;
+}
+
+.icon-btn:active { opacity: 0.6; }
 
 .stats-grid {
   display: grid;
@@ -476,24 +503,3 @@ html, body {
   letter-spacing: 0;
 }
 
-/* ── Backup Row ────────────────────────────────────── */
-.backup-row {
-  display: flex;
-  gap: 10px;
-}
-
-.backup-btn {
-  flex: 1;
-  height: 44px;
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 500;
-  font-family: 'Pretendard Variable', 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: opacity 80ms ease-out;
-}
-
-.backup-btn:active { opacity: 0.6; }

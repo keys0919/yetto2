@@ -62,7 +62,26 @@
   <!-- 기록 -->
   <div id="screen-stats" class="screen">
     <div class="safe-area stats-area">
-      <h1 class="stats-heading">기록</h1>
+      <div class="stats-header-row">
+        <h1 class="stats-heading">기록</h1>
+        <div class="stats-header-actions">
+          <button class="icon-btn" id="btn-import-trigger" title="가져오기">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+          </button>
+          <button class="icon-btn" id="btn-export" title="내보내기">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+          </button>
+          <input type="file" id="input-import" accept=".json" style="display:none">
+        </div>
+      </div>
 
       <div class="stats-grid">
         <div class="stat-card">
@@ -114,11 +133,6 @@
         <div class="daylog-list" id="daylog-list"></div>
       </div>
 
-      <div class="backup-row">
-        <button class="backup-btn" id="btn-export">내보내기</button>
-        <button class="backup-btn" id="btn-import-trigger">가져오기</button>
-        <input type="file" id="input-import" accept=".json" style="display:none">
-      </div>
     </div>
   </div>
 
