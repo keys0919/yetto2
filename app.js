@@ -1,5 +1,56 @@
 'use strict';
 
+// ── Supabase ──────────────────────────────────────────
+const sb = supabase.createClient(
+  'https://ppsstgcjzbsqbnanlcfm.supabase.co',
+  'sb_publishable_gpqLY0R0KvlXaFj2MF-Acw_2-riJKvn'
+);
+let currentUserId = null;
+
+async function syncFromRemote(userId) {
+  const { data, error } = await sb.from('sessions')
+    .select('started_at,duration_sec')
+    .eq('user_id', userId)
+    .order('started_at', { ascending: true });
+  if (error || !data || data.length === 0) return;
+
+  const local = load();
+  const tsSet = new Set(local.sessions.map(s => s.startedAt));
+  let added = 0;
+  data.forEach(row => {
+    const ts = new Date(row.started_at).getTime();
+    if (!tsSet.has(ts)) {
+      local.sessions.push({ id: String(ts), startedAt: ts, durationSec: row.duration_sec, date: dateStr(new Date(ts)) });
+      added++;
+    }
+  });
+  if (added > 0) {
+    local.sessions.sort((a, b) => a.startedAt - b.startedAt);
+    save(local);
+  }
+}
+
+function pushSession(session, userId) {
+  sb.from('sessions').insert({
+    user_id: userId,
+    started_at: new Date(session.startedAt).toISOString(),
+    duration_sec: session.durationSec,
+    outcome: 'success',
+  }).then(({ error }) => {
+    if (error) console.warn('[supabase] insert failed:', error.message);
+  });
+}
+
+function showLoginScreen() {
+  document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+  document.getElementById('screen-login').classList.add('active');
+  document.getElementById('tab-bar').style.display = 'none';
+}
+
+function hideLoginScreen() {
+  document.getElementById('screen-login').classList.remove('active');
+}
+
 const STORAGE_KEY = 'yetto2';
 
 // ── 데이터 ──────────────────────────────────────────
@@ -301,15 +352,17 @@ document.getElementById('btn-done').addEventListener('click', () => {
   const data = load();
   if (!data.active) return;
 
-  const durationSec = Math.floor((Date.now() - data.active.startedAt) / 1000);
+  const startedAt = data.active.startedAt;
+  const durationSec = Math.floor((Date.now() - startedAt) / 1000);
   data.sessions.push({
-    id: String(data.active.startedAt),
-    startedAt: data.active.startedAt,
+    id: String(startedAt),
+    startedAt,
     durationSec,
     date: todayStr(),
   });
   data.active = null;
   save(data);
+  if (currentUserId) pushSession({ startedAt, durationSec }, currentUserId);
 
   const stats = computeStats();
   document.getElementById('result-time').textContent = formatTime(durationSec);
@@ -359,14 +412,29 @@ document.addEventListener('visibilitychange', () => {
   if (!document.hidden && timerInterval) updateTimerDisplay();
 });
 
-// ── 초기화 ───────────────────────────────────────────
-function init() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+// ── 로그인 이벤트 ──────────────────────────────────────
+document.getElementById('btn-login').addEventListener('click', async () => {
+  const email = document.getElementById('login-email').value.trim();
+  if (!email) return;
+  const btn = document.getElementById('btn-login');
+  btn.disabled = true;
+  btn.textContent = '전송 중...';
+  const { error } = await sb.auth.signInWithOtp({
+    email,
+    options: { emailRedirectTo: location.origin + location.pathname },
+  });
+  if (error) {
+    btn.disabled = false;
+    btn.textContent = '로그인 링크 받기';
+    document.getElementById('login-msg').textContent = '오류가 발생했습니다. 다시 시도해 주세요.';
+  } else {
+    document.getElementById('login-form').style.display = 'none';
+    document.getElementById('login-msg').textContent = '이메일을 확인해 주세요.\n링크를 탭하면 자동으로 로그인됩니다.';
   }
+});
 
-  initDayLog();
-
+// ── 초기화 ───────────────────────────────────────────
+function startApp() {
   const data = load();
   if (data.active) {
     showScreen('timer');
@@ -375,6 +443,33 @@ function init() {
     updateHome();
     showScreen('home');
   }
+}
+
+async function init() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+  initDayLog();
+
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session && !currentUserId) {
+      currentUserId = session.user.id;
+      history.replaceState(null, '', location.pathname);
+      await syncFromRemote(currentUserId);
+      hideLoginScreen();
+      startApp();
+    }
+  });
+
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    showLoginScreen();
+    return;
+  }
+
+  currentUserId = session.user.id;
+  await syncFromRemote(currentUserId);
+  startApp();
 }
 
 init();

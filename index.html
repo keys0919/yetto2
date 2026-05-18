@@ -18,6 +18,20 @@
 </head>
 <body>
 
+  <!-- 로그인 -->
+  <div id="screen-login" class="screen">
+    <div class="safe-area login-area">
+      <div class="login-center">
+        <h1 class="login-title">Yetto</h1>
+        <p class="login-sub" id="login-msg">이메일로 로그인하면<br>기기를 바꿔도 기록이 유지됩니다</p>
+        <div class="login-form" id="login-form">
+          <input class="login-input" type="email" id="login-email" placeholder="이메일 입력" autocomplete="email" inputmode="email">
+          <button class="primary-btn" id="btn-login">로그인 링크 받기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- 홈 -->
   <div id="screen-home" class="screen">
     <div class="safe-area">
@@ -136,6 +150,7 @@
     </button>
   </nav>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
