@@ -13,8 +13,16 @@ function save(data) {
 }
 
 // ── 날짜 ─────────────────────────────────────────────
+function dateStr(d) {
+  const x = d ? new Date(d) : new Date();
+  const y = x.getFullYear();
+  const m = String(x.getMonth() + 1).padStart(2, '0');
+  const day = String(x.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
 function todayStr() {
-  return new Date().toISOString().slice(0, 10);
+  return dateStr();
 }
 
 
@@ -206,7 +214,7 @@ function renderDayLog() {
   document.getElementById('day-label').textContent = isToday ? `오늘 · ${logDate.getMonth() + 1}/${logDate.getDate()}` : dateStr;
   document.getElementById('day-next').disabled = isToday;
 
-  const key  = logDate.toISOString().slice(0, 10);
+  const key  = dateStr(logDate);
   const data = load();
   const allSorted = [...data.sessions].sort((a, b) => a.startedAt - b.startedAt);
   const rows = allSorted.filter(s => s.date === key);

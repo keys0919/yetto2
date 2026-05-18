@@ -335,7 +335,6 @@ html, body {
 
 /* ── Day Log ───────────────────────────────────────── */
 .daylog-wrap {
-  flex: 1;
   background: var(--surface);
   border-radius: 18px;
   overflow: hidden;
