@@ -209,9 +209,9 @@ function formatTimeOfDay(ts) {
 function renderDayLog() {
   const today   = startOfDay(new Date());
   const isToday = logDate.getTime() === today.getTime();
-  const dateStr = `${logDate.getFullYear()}년 ${logDate.getMonth() + 1}월 ${logDate.getDate()}일`;
+  const dateLabel = `${logDate.getFullYear()}년 ${logDate.getMonth() + 1}월 ${logDate.getDate()}일`;
 
-  document.getElementById('day-label').textContent = isToday ? `오늘 · ${logDate.getMonth() + 1}/${logDate.getDate()}` : dateStr;
+  document.getElementById('day-label').textContent = isToday ? `오늘 · ${logDate.getMonth() + 1}/${logDate.getDate()}` : dateLabel;
   document.getElementById('day-next').disabled = isToday;
 
   const key  = dateStr(logDate);
