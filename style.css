@@ -241,6 +241,7 @@ html, body {
   gap: 24px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  min-height: 0;
 }
 
 .stats-heading {
