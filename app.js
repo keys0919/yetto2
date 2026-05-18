@@ -323,7 +323,32 @@ function importData(file) {
   reader.readAsText(file);
 }
 
+// ── 토스트 ───────────────────────────────────────────
+let toastTimer = null;
+
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 1800);
+}
+
 // ── 이벤트 ───────────────────────────────────────────
+document.getElementById('btn-quick-add').addEventListener('click', () => {
+  const data = load();
+  const now = Date.now();
+  data.sessions.push({
+    id: String(now),
+    startedAt: now,
+    durationSec: 0,
+    date: todayStr(),
+  });
+  save(data);
+  updateHome();
+  showToast('흡연 횟수 추가됨');
+});
+
 document.getElementById('btn-urge').addEventListener('click', () => {
   const data = load();
   data.active = { startedAt: Date.now() };
