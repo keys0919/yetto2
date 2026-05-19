@@ -382,13 +382,8 @@ document.getElementById('btn-done').addEventListener('click', () => {
   data.active = null;
   save(data);
 
-  const stats = computeStats();
-  document.getElementById('result-time').textContent = formatTime(durationSec);
-  document.getElementById('result-sub').textContent  =
-    durationSec >= stats.allTimeBest && durationSec > 0 ? '전체 최고' :
-    stats.todayCount > 1 ? `오늘 ${stats.todayCount}번째` : '';
-
-  showScreen('result');
+  updateHome();
+  showScreen('home');
 });
 
 document.getElementById('btn-retry').addEventListener('click', () => {

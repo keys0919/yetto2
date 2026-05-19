@@ -195,6 +195,15 @@ html, body {
 
 .text-btn:active { opacity: 0.5; }
 
+.home-row-btns {
+  display: flex;
+  width: 100%;
+}
+
+.home-row-btns .text-btn {
+  flex: 1;
+}
+
 /* ── Toast ─────────────────────────────────────────── */
 .toast {
   position: fixed;
@@ -308,10 +317,13 @@ html, body {
 
 /* ── Stats Screen ──────────────────────────────────── */
 .stats-area {
-  gap: 24px;
+  display: block;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  min-height: 0;
+}
+
+.stats-area > * + * {
+  margin-top: 24px;
 }
 
 .stats-header-row {
