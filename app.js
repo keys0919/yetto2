@@ -1,5 +1,22 @@
 'use strict';
 
+// CSS env(safe-area-inset-bottom)이 iOS PWA standalone에서 0을 반환하는 버그 대응
+// head 인라인 스크립트에서 초기값 세팅 후, 레이아웃 완료 시점에 정확한 값으로 보정
+function _updateSafeBottom() {
+  const el = document.createElement('div');
+  el.style.cssText = 'position:fixed;bottom:0;left:0;width:0;height:env(safe-area-inset-bottom,0px);pointer-events:none;';
+  document.body.appendChild(el);
+  const h = parseFloat(getComputedStyle(el).height) || 0;
+  document.body.removeChild(el);
+  // env()가 실제로 값을 반환하면 그것으로 덮어씀
+  // 0을 반환하면 head 스크립트의 heuristic 값 유지
+  if (h > 0) {
+    document.documentElement.style.setProperty('--safe-bottom', h + 'px');
+  }
+}
+document.addEventListener('DOMContentLoaded', _updateSafeBottom);
+window.addEventListener('orientationchange', function () { setTimeout(_updateSafeBottom, 300); });
+
 const STORAGE_KEY = 'yetto2';
 
 // ── 데이터 ──────────────────────────────────────────

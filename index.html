@@ -15,6 +15,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap">
   <link rel="stylesheet" href="style.css">
+  <script>
+    // env(safe-area-inset-bottom)이 PWA standalone에서 0을 반환하는 버그 대응
+    // 첫 렌더 전에 --safe-bottom을 세팅해 레이아웃 flash 방지
+    (function () {
+      var bottom = 0;
+      if (window.navigator.standalone === true && window.screen.height >= 812) {
+        bottom = 34; // Face ID 기기 홈 인디케이터
+      }
+      document.documentElement.style.setProperty('--safe-bottom', bottom + 'px');
+    }());
+  </script>
 </head>
 <body>
 

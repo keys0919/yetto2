@@ -23,6 +23,7 @@
   --shadow-neutral: rgba(9, 28, 34, 0.07);
   --tab-bg:         rgba(237, 246, 247, 0.94);
   --tab-height:     58px;
+  --safe-bottom:    0px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -63,7 +64,7 @@ html, body {
   position: fixed;
   inset: 0;
   background: var(--bg);
-  padding-bottom: calc(var(--tab-height) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: calc(var(--tab-height) + var(--safe-bottom, env(safe-area-inset-bottom, 0px)));
 }
 
 .screen.active  { display: flex; flex-direction: column; }
@@ -79,7 +80,7 @@ html, body {
 }
 
 .screen.no-tab .safe-area {
-  padding-bottom: max(env(safe-area-inset-bottom, 0px), 20px);
+  padding-bottom: max(var(--safe-bottom, env(safe-area-inset-bottom, 0px)), 20px);
 }
 
 /* ── Entrance Animation ────────────────────────────── */
@@ -251,7 +252,7 @@ html, body {
 /* ── Toast ─────────────────────────────────────────── */
 .toast {
   position: fixed;
-  bottom: calc(var(--tab-height) + env(safe-area-inset-bottom, 0px) + 14px);
+  bottom: calc(var(--tab-height) + var(--safe-bottom, env(safe-area-inset-bottom, 0px)) + 14px);
   left: 50%;
   transform: translateX(-50%);
   background: var(--text);
@@ -278,7 +279,7 @@ html, body {
 }
 
 .timer-bottom-bar {
-  padding: 12px 18px max(env(safe-area-inset-bottom, 0px), 24px);
+  padding: 12px 18px max(var(--safe-bottom, env(safe-area-inset-bottom, 0px)), 24px);
 }
 
 .timer-display {
@@ -710,8 +711,8 @@ html, body {
   bottom: 0;
   left: 0;
   right: 0;
-  height: calc(var(--tab-height) + env(safe-area-inset-bottom, 0px));
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+  height: calc(var(--tab-height) + var(--safe-bottom, env(safe-area-inset-bottom, 0px)));
+  padding-bottom: var(--safe-bottom, env(safe-area-inset-bottom, 0px));
   background: var(--tab-bg);
   border-top: 1px solid var(--border-subtle);
   -webkit-backdrop-filter: blur(20px);
