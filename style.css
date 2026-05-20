@@ -279,6 +279,8 @@ html, body {
 }
 
 .timer-bottom-bar {
+  display: flex;
+  justify-content: center;
   padding: 12px 18px max(var(--safe-bottom, env(safe-area-inset-bottom, 0px)), 24px);
 }
 
