@@ -23,26 +23,28 @@
     <div class="safe-area">
       <div class="home-center">
 
-        <div class="home-status-card">
-          <div class="home-status-elapsed" id="home-elapsed">—</div>
-          <div class="home-status-label">마지막 흡연 후 경과</div>
-          <div class="home-status-compare" id="home-elapsed-compare"></div>
-        </div>
+        <div class="home-info">
+          <div class="home-status-card">
+            <div class="home-status-elapsed" id="home-elapsed">—</div>
+            <div class="home-status-label">마지막 흡연 후 경과</div>
+            <div class="home-status-compare" id="home-elapsed-compare"></div>
+          </div>
 
-        <div class="record-row">
-          <div class="record-item">
-            <span class="record-value" id="home-today-count">—</span>
-            <span class="record-label">오늘 흡연</span>
-          </div>
-          <div class="record-divider"></div>
-          <div class="record-item">
-            <span class="record-value record-value--sm" id="home-last-gap">—</span>
-            <span class="record-label">마지막 간격</span>
-          </div>
-          <div class="record-divider"></div>
-          <div class="record-item">
-            <span class="record-value record-value--sm" id="home-today-avg-gap">—</span>
-            <span class="record-label">오늘 평균</span>
+          <div class="record-row">
+            <div class="record-item">
+              <span class="record-value" id="home-today-count">—</span>
+              <span class="record-label">오늘 흡연</span>
+            </div>
+            <div class="record-divider"></div>
+            <div class="record-item">
+              <span class="record-value record-value--sm" id="home-last-gap">—</span>
+              <span class="record-label">마지막 간격</span>
+            </div>
+            <div class="record-divider"></div>
+            <div class="record-item">
+              <span class="record-value record-value--sm" id="home-today-avg-gap">—</span>
+              <span class="record-label">오늘 평균</span>
+            </div>
           </div>
         </div>
 
@@ -103,6 +105,8 @@
         </div>
       </div>
 
+      <div class="section-label">오늘</div>
+
       <div class="stats-hero-card">
         <span class="stat-hero-label">오늘 흡연</span>
         <span class="stat-hero-value" id="stats-today-count">—</span>
@@ -110,18 +114,20 @@
 
       <div class="stats-sub-grid">
         <div class="stat-card">
-          <span class="stat-card-value stat-card-value--sm" id="stats-last-gap">—</span>
           <span class="stat-card-label">마지막 간격</span>
+          <span class="stat-card-value stat-card-value--sm" id="stats-last-gap">—</span>
         </div>
         <div class="stat-card">
-          <span class="stat-card-value stat-card-value--sm" id="stats-today-avg-gap">—</span>
           <span class="stat-card-label">오늘 평균</span>
+          <span class="stat-card-value stat-card-value--sm" id="stats-today-avg-gap">—</span>
         </div>
         <div class="stat-card">
-          <span class="stat-card-value stat-card-value--sm" id="stats-week-avg-gap">—</span>
           <span class="stat-card-label">주간 평균</span>
+          <span class="stat-card-value stat-card-value--sm" id="stats-week-avg-gap">—</span>
         </div>
       </div>
+
+      <div class="section-label">기간 비교</div>
 
       <div class="avg-card">
         <div class="avg-card-header">
@@ -148,6 +154,8 @@
           </div>
         </div>
       </div>
+
+      <div class="section-label">일별 기록</div>
 
       <div class="daylog-wrap">
         <div class="daylog-header">

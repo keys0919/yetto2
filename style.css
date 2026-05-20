@@ -22,7 +22,7 @@
   --shadow-warm:    rgba(10, 60, 80, 0.08);
   --shadow-neutral: rgba(9, 28, 34, 0.07);
   --tab-bg:         rgba(237, 246, 247, 0.94);
-  --tab-height:     48px;
+  --tab-height:     58px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -82,37 +82,64 @@ html, body {
   padding-bottom: max(env(safe-area-inset-bottom, 0px), 20px);
 }
 
+/* ── Entrance Animation ────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 /* ── Home ──────────────────────────────────────────── */
 .home-center {
-  margin: auto 0;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
   width: 100%;
+}
+
+.home-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  width: 100%;
+}
+
+.home-info .home-status-card {
+  animation: fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.home-info .record-row {
+  animation: fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.07s both;
+}
+
+.home-actions {
+  animation: fadeUp 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.14s both;
 }
 
 /* 현재 상태 카드 */
 .home-status-card {
   width: 100%;
   background: var(--surface);
-  border-radius: 20px;
-  padding: 18px 20px 16px;
+  border-radius: 24px;
+  padding: 28px 28px 24px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  box-shadow: 0 1px 3px var(--shadow-warm);
+  align-items: flex-start;
+  gap: 6px;
+  box-shadow: 0 6px 24px var(--shadow-warm);
 }
 
 .home-status-elapsed {
-  font-size: 38px;
-  font-weight: 300;
+  font-size: 58px;
+  font-weight: 200;
   font-variant-numeric: tabular-nums;
   font-family: 'Roboto', 'SF Pro Rounded', monospace;
-  letter-spacing: -0.5px;
+  letter-spacing: -3px;
   color: var(--primary);
-  line-height: 1.1;
+  line-height: 1;
 }
 
 .home-status-label {
@@ -127,7 +154,7 @@ html, body {
   font-weight: 500;
   color: var(--text-secondary);
   min-height: 18px;
-  margin-top: 2px;
+  margin-top: 6px;
 }
 
 /* 요약 수치 행 */
@@ -177,6 +204,7 @@ html, body {
   align-items: stretch;
   gap: 10px;
   width: min(320px, 100%);
+  padding-bottom: 24px;
 }
 
 .urge-btn {
@@ -193,11 +221,11 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 3px 10px var(--shadow-warm);
-  transition: transform 80ms ease-out, opacity 80ms ease-out;
+  box-shadow: 0 4px 14px var(--shadow-warm);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-out, box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.urge-btn:active { transform: scale(0.97); opacity: 0.7; }
+.urge-btn:active { transform: scale(0.97) translateY(1px); opacity: 0.88; box-shadow: 0 1px 4px var(--shadow-warm); }
 
 .text-btn {
   flex: 1;
@@ -209,10 +237,11 @@ html, body {
   border: none;
   height: 38px;
   cursor: pointer;
-  transition: opacity 80ms ease-out;
+  border-radius: 8px;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.text-btn:active { opacity: 0.5; }
+.text-btn:active { opacity: 0.4; }
 
 .home-row-btns {
   display: flex;
@@ -309,10 +338,10 @@ html, body {
   border: none;
   border-radius: 14px;
   cursor: pointer;
-  transition: transform 80ms ease-out, opacity 80ms ease-out;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-out;
 }
 
-.primary-btn:active { transform: scale(0.97); opacity: 0.7; }
+.primary-btn:active { transform: scale(0.97) translateY(1px); opacity: 0.7; }
 
 .secondary-btn {
   width: 100%;
@@ -325,10 +354,10 @@ html, body {
   border: none;
   border-radius: 14px;
   cursor: pointer;
-  transition: opacity 80ms ease-out;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.secondary-btn:active { opacity: 0.7; }
+.secondary-btn:active { opacity: 0.6; }
 
 /* ── Stats Screen ──────────────────────────────────── */
 .stats-area {
@@ -338,7 +367,25 @@ html, body {
 }
 
 .stats-area > * + * {
-  margin-top: 12px;
+  margin-top: 20px;
+}
+
+.stats-area > .section-label {
+  margin-top: 32px;
+}
+
+.stats-area > .section-label + * {
+  margin-top: 10px;
+}
+
+/* 섹션 구분 레이블 */
+.section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  padding: 0 4px;
 }
 
 .stats-header-row {
@@ -373,67 +420,78 @@ html, body {
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
-  transition: opacity 80ms ease-out;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.icon-btn:active { opacity: 0.6; }
+.icon-btn:active { opacity: 0.5; }
 
 /* 히어로 카드 */
 .stats-hero-card {
   background: var(--primary);
   border-radius: 18px;
-  padding: 18px 20px 16px;
+  padding: 24px 24px 20px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 6px;
   box-shadow: 0 2px 6px var(--shadow-warm);
 }
 
 .stat-hero-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
-  letter-spacing: 0.3px;
-  color: rgba(255, 255, 255, 0.65);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .stat-hero-value {
-  font-size: 38px;
-  font-weight: 700;
+  font-size: 52px;
+  font-weight: 200;
   font-variant-numeric: tabular-nums;
   font-family: 'Roboto', 'SF Pro Rounded', monospace;
   color: #FFFFFF;
-  line-height: 1.1;
-  letter-spacing: -0.5px;
+  line-height: 1;
+  letter-spacing: -2px;
 }
 
-/* 서브 3칸 그리드 */
+/* 서브 리스트 */
 .stats-sub-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
-}
-
-.stat-card {
-  background: var(--surface);
-  border-radius: 16px;
-  padding: 12px 10px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  background: var(--surface);
+  border-radius: 16px;
+  overflow: hidden;
   box-shadow: 0 1px 3px var(--shadow-warm);
 }
 
+.stat-card {
+  background: transparent;
+  border-radius: 0;
+  padding: 14px 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  box-shadow: none;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.stat-card:last-child {
+  border-bottom: none;
+}
+
 .stat-card-label {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 400;
-  letter-spacing: 0.1px;
+  letter-spacing: 0;
   color: var(--text-secondary);
   line-height: 1.3;
 }
 
 .stat-card-value {
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
   font-family: 'Roboto', 'SF Pro Rounded', monospace;
   color: var(--text);
@@ -460,9 +518,9 @@ html, body {
 }
 
 .avg-card-title {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.3px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
   color: var(--text-tertiary);
   text-transform: uppercase;
 }
@@ -555,10 +613,10 @@ html, body {
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
-  transition: opacity 80ms ease-out;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.cal-nav:active  { opacity: 0.7; }
+.cal-nav:active  { opacity: 0.6; }
 .cal-nav:disabled { color: var(--border); cursor: default; opacity: 1; }
 
 .daylog-list {
@@ -655,26 +713,44 @@ html, body {
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   display: flex;
-  align-items: flex-start;
-  padding-top: 6px;
+  align-items: center;
+  padding-top: 0;
 }
 
 .tab-btn {
   flex: 1;
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2px;
+  gap: 3px;
   background: none;
   border: none;
   color: var(--text-tertiary);
   cursor: pointer;
-  padding: 4px 0;
-  min-height: 40px;
-  transition: color 150ms ease-out;
+  padding: 6px 0;
+  min-height: 44px;
+  transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tab-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 32px;
+  height: 2px;
+  background: var(--primary);
+  border-radius: 0 0 3px 3px;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .tab-btn.active { color: var(--primary); }
+
+.tab-btn.active::before {
+  transform: translateX(-50%) scaleX(1);
+}
 
 .tab-label {
   font-size: 10px;
