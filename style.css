@@ -277,6 +277,10 @@ html, body {
   gap: 16px;
 }
 
+.timer-bottom-bar {
+  padding: 12px 18px max(env(safe-area-inset-bottom, 0px), 24px);
+}
+
 .timer-display {
   font-size: 72px;
   font-weight: 300;
